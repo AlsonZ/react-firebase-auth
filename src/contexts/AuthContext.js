@@ -9,6 +9,7 @@ export const useAuth = () => {
 
 export function AuthProvider(props) {
   const [user, setUser] = useState();
+  const [loading, setLoading] = useState(true);
 
   const signup = (email, password) => {
     return auth.createUserWithEmailAndPassword(email, password)
@@ -16,7 +17,9 @@ export function AuthProvider(props) {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
+      //checks if there is a user, and then loading is set to false, as initially there is null users
       setUser(user)
+      setLoading(false)
     })
 
     return unsubscribe
@@ -29,7 +32,8 @@ export function AuthProvider(props) {
 
   return (
     <AuthContext.Provider value={value}>
-      {props.children}
+      {!loading && props.children}
+      {/* {props.children} */}
     </AuthContext.Provider>
   )
 }
