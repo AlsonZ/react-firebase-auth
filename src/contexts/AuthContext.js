@@ -23,6 +23,12 @@ export function AuthProvider(props) {
   const resetPassword = (email) => {
     return auth.sendPasswordResetEmail(email)
   } 
+  const updateEmail = (email) => {
+    return user.updateEmail(email)
+  } 
+  const updatePassword = (password) => {
+    return user.updatePassword(password)
+  } 
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -39,7 +45,9 @@ export function AuthProvider(props) {
     login,
     logout,
     resetPassword,
-    signup
+    signup,
+    updateEmail,
+    updatePassword
   }
 
   return (
