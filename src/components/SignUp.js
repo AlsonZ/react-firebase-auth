@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Form, Button, Card, Alert } from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
@@ -11,7 +11,15 @@ export default function Signup() {
   const { signup } = useAuth();
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const componentRef = useRef(true)
   const history = useHistory();
+
+  useEffect(() => {
+    // on unmount
+    return () => {
+      componentRef.current = false;
+    }
+  },[])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,12 +32,14 @@ export default function Signup() {
     try {
       setError('')
       setLoading(true)
-      signup(emailRef.current.value, passwordRef.current.value)
+      await signup(emailRef.current.value, passwordRef.current.value)
       history.push('/login')
-    }catch{
-      setError('Failed to create an account')
+    }catch(e){
+      setError(e.message)
     }
-    setLoading(false)
+    if(componentRef.current) {
+      setLoading(false)
+    }
   }
 
   return (

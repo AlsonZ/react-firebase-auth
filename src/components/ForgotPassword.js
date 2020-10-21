@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Form, Button, Card, Alert } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
@@ -10,6 +10,14 @@ export default function ForgotPassword() {
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
+  const componentRef = useRef(true)
+
+  useEffect(() => {
+    // on unmount
+    return () => {
+      componentRef.current = false;
+    }
+  },[])
 
 
   const handleSubmit = async (e) => {
@@ -24,7 +32,9 @@ export default function ForgotPassword() {
     }catch{
       setError('Email does not exist!')
     }
-    setLoading(false)
+    if(componentRef.current) {
+      setLoading(false)
+    }
   }
 
   return (
